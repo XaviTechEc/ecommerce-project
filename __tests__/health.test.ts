@@ -1,5 +1,5 @@
 describe('health.ts', () => {
-	test('should return true', () => {
-		expect(true).toBeTruthy();
-	});
+  test('should return true', () => {
+    expect(true).toBeTruthy();
+  });
 });
