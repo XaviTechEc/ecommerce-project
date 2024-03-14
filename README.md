@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# E-Commerce Project with DDD, Clean Architecture, and CQRS
+
+This repository contains a practical e-commerce project that demonstrates how to build a robust system while adhering to best practices. The project is built using Node.js with Express and npm.
+
+## Features
+
+- Domain-Driven Design (DDD): The project follows DDD principles to create a clear separation of concerns and maintainable code.
+- Clean Architecture: The architecture emphasizes modularity, testability, and scalability.
+- CQRS (Command Query Responsibility Segregation): The system separates read and write operations, improving performance and scalability.
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the Repository:
+   `git clone https://github.com/XaviTechEc/ecommerce-project.git`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Install Dependencies:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```
+   cd e-commerce-project
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure Environment Variables: Create a `.env` file with the necessary configuration (e.g., database connection details, API keys).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. Run the Application:
 
-## Learn More
+   ```
+   npm start
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- src/
+  <!-- controllers/: Contains route handlers and business logic.
+  models/: Defines data models using DDD concepts.
+  services/: Implements application services.
+  middlewares/: Custom middleware functions.
+  routes/: Defines API routes.
+  config/: Configuration files.
+  utils/: Utility functions. -->
+- tests/: Unit and integration tests.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Contributions are welcome! Please follow the contribution guidelines.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.
