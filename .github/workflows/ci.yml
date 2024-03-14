@@ -1,0 +1,133 @@
+name: CI pipeline
+
+run-name: Actor ${{ github.actor }}
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # === INSTALL DEPENDENCIES JOB ===
+  start:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+    steps:
+      - name: 'Start'
+        run: echo Starting CI from ${{ github.workflow }} triggered by the event ${{ github.event_name }}
+
+  install:
+    needs: [start]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        node: [18]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: ${{ matrix.node }}
+
+      - name: 'Get npm cache directory'
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 'Install dependencies 📚'
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+  # === LINT JOB ===
+  lint:
+    needs: [install]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        node: [18]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 'Install dependencies 📚'
+        run: npm ci
+
+      - name: 'Run Linter 🎇'
+        run: npm run lint
+
+  # === BUILD JOB ===
+  build:
+    needs: [install]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        node: [18]
+    name: ${{ matrix.os }} - Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 'Install dependencies 📚'
+        run: npm ci
+
+      - name: 'Run Build 🛠️'
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  # === TEST JOB ===
+  test:
+    needs: [lint, build]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        node: [18]
+    name: ${{ matrix.os }} - Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 'Install dependencies 📚'
+        run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: 'Run Unit Tests 🧪'
+        run: npm run test
+
+  # TODO: === E2E TEST ===
+
+  # TODO: === DEPLOY JOB ===
