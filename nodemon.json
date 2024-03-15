@@ -1,11 +1,11 @@
 {
   "restartable": "rs",
-  "ignore": [".git", "node_modules/"],
+  "ignore": [".git", "node_modules", "dist"],
   "verbose": true,
   "watch": ["src"],
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "dev"
   },
   "ext": ".ts,.js",
-  "exec": "npx ts-node ./src/app.ts"
+  "exec": "ts-node ./src/apps/BackOffice/backend/start.ts"
 }
