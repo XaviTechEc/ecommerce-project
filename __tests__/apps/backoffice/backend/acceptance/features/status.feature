@@ -1,10 +1,9 @@
-Feature: Check Status
+Feature: Check API Status
 
-  In order to know the acceptance test config is up and running
+  In order to know the server is up and running
   As a health check
-  I want to check the status
+  I want to check the API status
 
-  Scenario: Check the Check Status
-    Given The current year is 2024
-    When I ask for the year
-    Then I should be told "2024"
+  Scenario: Check the API Status
+    Given I send a GET request to "/api/v1/status"
+    Then the response status code should be 200

@@ -1,22 +1,23 @@
-import { Given, When, Then } from '@cucumber/cucumber';
-import assert from 'assert';
+import { AfterAll, BeforeAll, Given, Then } from '@cucumber/cucumber';
+import request from 'supertest';
+import { BackOfficeBackendApp } from '../../../../../../src/apps/BackOffice/backend/BackOfficeBackendApp';
 
-function getCurrentYear() {
-  return new Date().getFullYear();
-}
+let _request: request.Test;
+let app: BackOfficeBackendApp;
 
-let _year: number;
-let _currentYear: number;
-
-Given('The current year is {int}', function (year: number) {
-  _year = year;
+BeforeAll(async () => {
+  app = new BackOfficeBackendApp();
+  await app.start();
 });
 
-When('I ask for the year', function () {
-  _currentYear = getCurrentYear();
+AfterAll(async () => {
+  await app.stop();
 });
 
-Then('I should be told {string}', function (_expectedCurrentYear: string) {
-  assert.strictEqual(_year, _currentYear);
-  assert.strictEqual(_currentYear.toString(), _expectedCurrentYear);
+Given('I send a GET request to {string}', function (route: string) {
+  _request = request(app.httpServer!).get(route);
+});
+
+Then('the response status code should be {int}', async function (status: number) {
+  await _request.expect(status);
 });
